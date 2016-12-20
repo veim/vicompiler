@@ -5,11 +5,11 @@ Try to create my compiler, an intelligent one.
 
 ## Syntax Analyzer
 
-## Semantic Analysis
-
 ## Intermediate-code Generation
 
-## Register Allocation
+### Semantic Analysis
+
+### Register Allocation
 
 ## Execution Environment
 
