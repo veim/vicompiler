@@ -1,16 +1,16 @@
 # vicompiler
 Try to create my compiler, an intelligent one.
 
-## lexical parser
+## Lexical Analyzer
 
-## syntax parser
+## Syntax Analyzer
 
-## smantic parser
+## Semantic Analysis
 
-## intermeddiate code generation
+## Intermediate-code Generation
 
-## registar allocation
+## Register Allocation
 
-## execution environment
+## Execution Environment
 
-## code optimization
+## Code Optimization
