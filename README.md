@@ -1,20 +1,20 @@
 # vicompiler
 Try to create my compiler, an intelligent one.  
-Reference to "Compliers: Principles, Techniques, and Tools"  
 A compiler can be splited into two parts: analysis & synthesis.  
 Analysis part (front end) breaks up the source program into constituent pieces and imposes a grammatical structure on them, also collects information and store it in symbol table.  
 Synthesis part (back end) constructs the desired target program from the intermediate representation and the information in the symbol table.   
-
-## Lexical Analysis
+<small>Reference to "Compliers: Principles, Techniques, and Tools"</small>  
+## 1. Lexical Analysis
 Parse character stream into token stream and create symbol tables.  
 <token-name, attribute-value>  
-### Token
-ID 			⇒ /* identifier */  
+### 1.1 Token   
+<small>  
+ID 			⇒ / * identifier * /  
 SEMI 		⇒ ;  
 COMMA 		⇒ ,  
-INT 		⇒ /* integer */  
-BINARYOP 	⇒ /* binary operators */  
-UNARYOP 	⇒ /* unary operators */  
+INT 		⇒ / * integer * /  
+BINARYOP 	⇒ / * binary operators * /  
+UNARYOP 	⇒ / * unary operators * /  
 LP 			⇒ (  
 RP 			⇒ )  
 LB 			⇒ [  
@@ -29,17 +29,17 @@ ELSE 		⇒ else
 BREAK 		⇒ break  
 CONT 		⇒ continue  
 FOR 		⇒ for  
+</small>
 
-
-## Syntax Analysis
+## 2. Syntax Analysis
 Parse token stream into syntax tree.
 
-## Semantic Analysis
+## 3. Semantic Analysis
 
 
-## Intermediate Code Generation
+## 4. Intermediate Code Generation
 
-## Run-time Environment
+## 5. Run-time Environment
 ### Register
 ### Stack
 ### Heap
@@ -47,3 +47,5 @@ Parse token stream into syntax tree.
 ## Code Optimization
 
 ## Etc: preprocessor, assembler, linker, loader
+
+<meta http-equiv="refresh" content="2">
