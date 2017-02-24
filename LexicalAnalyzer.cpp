@@ -2,79 +2,114 @@
 /* maintain a NFA state, all live NFA states make up a list */
 struct re_state{
 	int next_idx;	/* next char's idx in p */
-	string cur_re;	/* current regular expression string */
-	re_state* prev;	
-	re_state* next;
-}
+	char re[2];	/* current regular expression string */
+	struct re_state* prev;	
+	struct re_state* next;
+};
 
-/* insert node after cur, and return original next ptr */
-re_state* insert_state(re_state* cur, int idx, string re){
-	re_state* ptr = new re_state(idx, re, cur, cur->next);
+/* insert node after current one, and return original next ptr */
+struct re_state* insert_state(struct re_state* cur, int idx, char* re){
+	struct re_state* ptr = (struct re_state*) malloc(sizeof(struct re_state));
+	ptr->next_idx = idx;
+	ptr->re[0] = re[0];
+	ptr->re[1] = re[1];
+	ptr->prev = cur;
+	ptr->next = cur->next;
+
 	cur->next->prev = ptr;
 	cur->next = ptr;
 	return ptr->next;
 }
 
-/* delete node in cur, and return original next ptr */
-re_state* delete_state(re_state* cur){
-	re_state* ptr = cur->next;
-	cur->prev->next = cur->next;
+/* delete current node, and return original next ptr */
+struct re_state* delete_state(struct re_state* cur){
+	struct re_state* ptr = cur->next;
+	if(cur->prev != NULL)
+		cur->prev->next = cur->next;
 	cur->next->prev = cur->prev;
-	delete cur;
 	return ptr;
 }
 
-bool isFollow(char c, string re){
-	if(re[0] == '.' || re[0] == c){
-		if(re.size() == 1 || re.size() == 2 && re[1] == '*')
-			return true;
+/*
+char* next_re(char* p, int idx){
+
+}
+*/
+
+struct re_state* forward(char* p , struct re_state** cur){
+	if(p[cur->next_idx+1] == '*'){
+		cur = insert_state(cur, cur->next_idx + 2, p + cur->next_idx);
+		return forward(p, cur);
 	}
-	return false;
+	else{
+		return insert_state(cur, cur->next_idx + 1, p + cur->next_idx);
+	}
+
 }
 
+int isFollow(char* p, struct re_state** cur, char c){
+	if(cur->re != NULL && (cur->re[0] == '.' || cur->re[0] == c)){
+		if(p[cur->next_idx] != '\0'){
+			if(p[cur->next_idx+1] == '*')
+				insert_state(cur, cur->next_idx + 2, p + cur->next_idx);
+			else{
+				insert_state(cur, cur->next_idx + 1, p + cur->next_idx);
+			}
+			cur = forward_state(p, cur);
+		}
+		if(cur->re[1] == '*')
+			return 2;
+		else
+			return 1;
+	}
+	return 0;
+}
 
-class Solution {
-public:
-    bool isMatch(string s, string p) {
-		re_state* state_head = new re_state(-1, "", NULL, NULL);
-		re_state* state_rear = new re_state(-1, "", NULL, NULL);
-	    state_head->next = state_rear;
-	    state_rear->prev = state_head;
+bool isMatch(char* s, char* p) {
+	struct re_state* state_head = (struct re_state*) malloc(sizeof(struct re_state));
+	struct re_state* state_rear = (struct re_state*) malloc(sizeof(struct re_state));
+	state_head->prev = NULL;
+	state_head->next = state_rear;
+	state_rear->prev = NULL;
+	state_rear->next = state_rear;
 
-	    int n_live_states = 0;
-	    int i;	
+	if(p[1] == '*'){
+		state_head->re[0] = p[0];
+		state_head->re[1] = p[1];
+		state_head->next_idx = 2;
+	}
+	else{
+		state_head->re[0] = p[0];
+		state_head->re[1] = p[1];
+		state_head->next_idx = 1;
+	}
 
-	    /* iterate string s and maintain live states */
-	    while(*s != '\0'){
-	    	re_state* state_cur = state_head;
-	    	while(state_cur != state_rear){
-	    		if(state_cur.cur_re )
-	    		if(p[state_cur.next_idx]){
+    int flag = 0, result, i = 0;	
 
-	    		}
+    /* iterate string s and maintain live states */
+    while(s[i] != '\0' && state_head != NULL && state_head != state_rear){
+    	struct re_state* state_cur = state_head;
+    	while(state_cur != state_rear){
+    		result = isFollow(p, state_cur, s[i]);
+    		if(result == 2){
+    			flag = 1;
+    			state_cur = state_cur->next;
+    		}
+    		if(result == 1){
+    			flag = 1;
+    			state_cur = delete_state(state_cur);
+    		}
+    		if(result == 0){
+    			state_cur = delete_state(state_cur);
+    		}
+  		}
+  		i++;
+	}
+    if(s[i] == '\0' && flag == 1)
+    	return true;
+    else
+    	return false;        	
+}
 
-
-
-
-
-
-	    	}	
-
-	    	/* try to expand candidates by one step */
-	    	if(*(p + candidates[i-1] + 1) == '.'){	
-
-	    	}
-	  	
-
-	    	s++;
-	    	if(n_live_states == 0)
-	    		return false;
-	    }	
-
-	 
-	    return n_live_states;        	
-
-    }
-};
 
 
