@@ -91,7 +91,7 @@ int forward_state(char* p , struct re_state* cur, char c, int* max_idx){
 
 
 bool isMatch(char* s, char* p) {
-	int result, live = 0, flag = 0, i = 0, max_idx = -1;	
+	int result, flag = 0, i = 0, max_idx = -1;	
 
 	if(s[0] == '\0' && p[0] == '\0')
 		return true;
@@ -116,7 +116,6 @@ bool isMatch(char* s, char* p) {
     	struct re_state* ptr = state_head->next;
     	struct re_state* next = ptr;
 
-    	live = 0;
     	while(ptr != state_rear){
     		next = ptr->next;
     		result = forward_state(p, ptr, s[i], &max_idx);
@@ -125,8 +124,10 @@ bool isMatch(char* s, char* p) {
   			if(result == 0 || ptr->re[1] != '*')
   				delete_state(ptr);
   
-  			if(result == 1 && p[ptr->next_idx] == '\0'){
-  				live = 1;
+  			if(result == 1 && p[ptr->next_idx] == '\0' 
+  				&& (s[i] == '\0' || s[i+1] == '\0')){
+  				
+  				return true;
   			}
   			ptr = next;
   		}
@@ -141,10 +142,7 @@ bool isMatch(char* s, char* p) {
   			i++;
 	}
 
-    if(s[i] == '\0' && p[max_idx] == '\0' && live == 1)
-    	return true;
-    else
-    	return false;        	
+   	return false;        	
 }
 
 
